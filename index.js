@@ -20,7 +20,7 @@ server.use("/api", apiRouter);
 client.connect();
 
 //listen to the server
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
   console.log("The server is up on port", PORT);
 });
