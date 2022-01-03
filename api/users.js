@@ -1,7 +1,14 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 
-const { getAllUsers, getUserByUsername, createUser } = require("../db");
+const {
+  getAllUsers,
+  getUserByUsername,
+  createUser,
+  getUserById,
+  updateUser,
+} = require("../db");
+const { requireUser } = require("./utils");
 const usersRouter = express.Router();
 
 usersRouter.use((req, res, next) => {
@@ -88,4 +95,36 @@ usersRouter.post("/register", async (req, res, next) => {
     next(error);
   }
 });
+
+usersRouter.delete("/:userId", requireUser, async (req, res, next) => {
+  const userId = req.params.userId;
+
+  console.log(userId, req.user.id);
+  if (req.user.id !== +userId) {
+    next({
+      name: "UnauthorizedUserError",
+      message: "You cannot deactivate this account",
+    });
+  }
+  try {
+    const user = await getUserById(userId);
+
+    console.log("------------------->", user, user.active);
+    if (user && user.active) {
+      const updatedUser = await updateUser(userId, { active: false });
+      res.send({ user: updatedUser });
+    } else {
+      next({
+        name: "NoSuchUser",
+        message: "There is no such user or accaut already deactiveted",
+      });
+    }
+  } catch ({ name, message }) {
+    next({
+      name,
+      message,
+    });
+  }
+});
+
 module.exports = usersRouter;

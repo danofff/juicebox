@@ -1,11 +1,5 @@
 const express = require("express");
-const {
-  getAllPosts,
-  createPost,
-  getPostById,
-  updatePost,
-  getPostsByTagName,
-} = require("../db");
+const { getAllPosts, createPost, getPostById, updatePost } = require("../db");
 const { requireUser } = require("./utils");
 
 const postsRouter = express.Router();
