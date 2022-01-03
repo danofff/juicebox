@@ -8,6 +8,17 @@ function requireUser(req, res, next) {
   next();
 }
 
+function requireUserActive(req, res, next) {
+  if (!req.user.active) {
+    next({
+      name: "InactiveUserError",
+      message: "You must have active account to perform this action",
+    });
+  }
+  next();
+}
+
 module.exports = {
   requireUser,
+  requireUserActive,
 };

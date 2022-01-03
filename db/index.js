@@ -299,7 +299,7 @@ async function getPostById(postId) {
       rows: [author],
     } = await client.query(
       `
-      SELECT id, username, name, location
+      SELECT id, username, name, location, active
       FROM users
       WHERE id=$1;
     `,
